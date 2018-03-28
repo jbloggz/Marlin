@@ -2960,6 +2960,14 @@ static void homeaxis(const AxisEnum axis) {
     }
   #endif
 
+  // Only perform home with Z axis
+  if (axis != Z_AXIS) {
+    set_axis_is_at_home(axis);
+    sync_plan_position();
+    destination[axis] = current_position[axis];
+    return;
+  }
+
   const int axis_home_dir =
     #if ENABLED(DUAL_X_CARRIAGE)
       (axis == X_AXIS) ? x_home_dir(active_extruder) :
